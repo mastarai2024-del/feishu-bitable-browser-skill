@@ -2,6 +2,8 @@
 
 需要支持的桌面系统、Python 3.11+、可下载Python包及浏览器的网络，以及有目标权限的飞书账号。公司资源的访问、编辑和下载限制继续有效。
 
+宿主Agent需要能读取本地Skill并运行本地命令或控制浏览器，例如Codex或Claude Code。没有Git时用仓库的Download ZIP解压；Git只是克隆源码的一种方式，不是运行Skill的必需依赖。
+
 ## 安装Skill
 
 仓库根目录运行`python install_skill.py`；macOS/Linux可用`python3`，Windows可用`py -3`。默认路径为`~/.agents/skills/feishu-bitable-browser`，符合[Codex官方用户技能位置](https://learn.chatgpt.com/docs/build-skills)。其它宿主显式传实际目录，如`--destination ~/.claude/skills`。调用`$feishu-bitable-browser`，不显示时重启Agent。

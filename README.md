@@ -18,6 +18,8 @@
 
 手动安装，在仓库根目录运行：
 
+没有Git也可以[下载ZIP](https://github.com/mastarai2024-del/feishu-bitable-browser-skill/archive/refs/heads/main.zip)，解压后在该文件夹打开终端，直接运行`python install_skill.py`。
+
 ```bash
 git clone https://github.com/mastarai2024-del/feishu-bitable-browser-skill.git
 cd feishu-bitable-browser-skill
