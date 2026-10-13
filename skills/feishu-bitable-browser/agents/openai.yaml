@@ -1,0 +1,4 @@
+interface:
+  display_name: "飞书多维表格网页登录"
+  short_description: "通过个人网页登录创建、整理多维表格并逐条核验，不依赖机器人"
+  default_prompt: "使用 $feishu-bitable-browser 操作我有权限的飞书多维表格，先读取和备份，再按需求写入并刷新核验。"

@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Synthetic Bitable fixture</title>
+<h1>Local fixture — not Feishu</h1><pre id="summary"></pre>
+<script>
+const seed = {
+  rev: 1,
+  fields: [
+    {id:'fldTitle',name:'需求标题',type:1},
+    {id:'fldDesc',name:'需求描述',type:1},
+    {id:'fldGroup',name:'业务模块',type:3,property:{options:[{id:'optOld',name:'Legacy',color:1}],optionsType:0}},
+    {id:'fldKeep',name:'Keep unchanged',type:1}
+  ],
+  records: ['Alpha','Beta','Gamma'].map((title,i)=>({id:['recOne','recTwo','recThree'][i],data:{
+    fldTitle:{value:[{text:title,type:'text'}]},fldDesc:{value:[{text:'Description '+title,type:'text'}]},
+    fldGroup:{value:'optOld'},fldKeep:{value:[{text:'Preserve '+i,type:'text'}]}
+  }})),calls:[]
+};
+let state = JSON.parse(localStorage.getItem('fixture-state') || 'null') || seed;
+window.fixtureControls={pending:false,incomplete:false,deny:false};
+const table={id:'tblFixture',name:'Synthetic requirements',get rev(){return state.rev},
+  get fields(){return Object.fromEntries(state.fields.map(f=>[f.id,field(f)]))},
+  getAllRecordCount:()=>state.records.length,
+  getLoadedRecordCount:()=>state.records.length-(fixtureControls.incomplete?1:0),
+  getRecordIds:()=>state.records.map(r=>r.id),
+  getRecordDataById:id=>state.records.find(r=>r.id===id)?.data,
+  getFieldById:id=>field(state.fields.find(f=>f.id===id))
+};
+function field(f){return f&&{...f,toJSON:()=>JSON.parse(JSON.stringify(f))};}
+window.fixtureRead=()=>JSON.parse(JSON.stringify(state));
+window.fixtureAlterTitle=()=>{state.records[0].data.fldTitle.value[0].text='Concurrent title';};
+window.bitableStore={modelOperator:{getTableById:id=>id==='tblFixture'?table:null},
+  _bitableSync:{queue:{getQueueStatus:()=>({localOperationLen:0,isSubmitting:fixtureControls.pending,isStoring:false})}},
+  commandManager:{execute(cmd){
+    if(fixtureControls.deny)return {result:1};
+    if(cmd.cmd==='SetFieldAttr')state.fields[state.fields.findIndex(f=>f.id===cmd.fieldId)]=JSON.parse(JSON.stringify(cmd.data));
+    else if(cmd.cmd==='SetRecords')for(const [id,fields] of Object.entries(cmd.data))
+      for(const [fid,cell] of Object.entries(fields))table.getRecordDataById(id)[fid]={value:cell.value};
+    else throw new Error('Unexpected command');
+    state.rev++;state.calls.push(cmd.cmd);localStorage.setItem('fixture-state',JSON.stringify(state));
+    document.getElementById('summary').textContent=JSON.stringify(state.records,null,2);
+    return {result:2};
+  }}
+};
+document.getElementById('summary').textContent=JSON.stringify(state.records,null,2);
+</script></html>
