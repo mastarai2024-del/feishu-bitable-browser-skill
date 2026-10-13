@@ -1,0 +1,14 @@
+.worktrees/
+PRIVATE_STATUS.md
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+state/
+outputs/
+profile/
+.env
+.env.*
+*.har
+storage-state*.json
